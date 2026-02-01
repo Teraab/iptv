@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IPTV By Hamza Cyber</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.container {
+  width: 90%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 18px;
+  padding: 30px;
+  animation: fadeIn 1.2s ease;
+  box-shadow: 0 0 40px rgba(0,0,0,0.4);
+}
+
+h1 {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.label {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 5px;
+}
+
+.box {
+  background: rgba(0,0,0,0.4);
+  padding: 12px 14px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.value {
+  font-size: 14px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.copy {
+  cursor: pointer;
+  font-size: 13px;
+  padding: 6px 10px;
+  background: #00c6ff;
+  border-radius: 6px;
+  color: #000;
+  transition: 0.3s;
+}
+
+.copy:hover {
+  background: #00f2fe;
+}
+
+/* WhatsApp Button */
+.whatsapp-btn {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #25D366, #1ebe5d);
+  color: #000;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  animation: pulse 1.8s infinite;
+}
+
+.whatsapp-btn:hover {
+  opacity: 0.9;
+}
+
+/* App Download Button */
+.app-btn {
+  margin-top: 10px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #ffb347, #ffcc33);
+  color: #000;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.app-btn:hover {
+  opacity: 0.9;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>IPTV BY HC</h1>
+
+  <div class="field">
+    <div class="label">Username</div>
+    <div class="box">
+      <div class="value" id="user">felicia123</div>
+      <div class="copy" onclick="copyText('user')">COPY</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="label">Password</div>
+    <div class="box">
+      <div class="value" id="pass">felicia321</div>
+      <div class="copy" onclick="copyText('pass')">COPY</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="label">IPTV URL</div>
+    <div class="box">
+      <div class="value" id="link">http://starshare.net:80</div>
+      <div class="copy" onclick="copyText('link')">COPY</div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Channel Button -->
+  <a class="whatsapp-btn" href="https://whatsapp.com/channel/0029Vb7cjOfBVJlB5lnxNr1Q" target="_blank">
+    🔔 Join Our WhatsApp Channel
+    <p>For more info and updates👈</p>
+  </a>
+
+  <!-- App Download Button -->
+  <a class="app-btn" href="https://d.apkpure.com/b/APK/com.nathnetwork.starsharetwo?version=latest" target="_blank">
+    ⬇️ Download IPTV App
+  </a>
+
+  <div class="footer">
+    © 2026 - POWDERED BY HAMZA CYBER
+  </div>
+</div>
+
+<script>
+function copyText(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+}
+</script>
+
+</body>
+</html>
