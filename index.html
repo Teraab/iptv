@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV HC · FULL REMOTE · CATEGORY+PLAYER+CHANNELS</title>
+    <title>IPTV HC · REMOTE · NO WRAP SCROLL</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jwplayer.com/libraries/IDzF9Zmk.js"></script>
     <style>
-        /* ----- TV OPTIMIZED, REMOTE FOCUS VISIBLE, PC LAYOUT ----- */
+        /* ----- TV OPTIMIZED, REMOTE FOCUS, NO CYCLE ON EDGES ----- */
         * {
             margin: 0;
             padding: 0;
@@ -34,7 +34,6 @@
             overflow: hidden;
             font-size: 18px;
         }
-        /* focus style for remote navigation - highly visible */
         :focus-visible {
             outline: none !important;
             box-shadow: var(--focus-glow) !important;
@@ -48,7 +47,6 @@
             padding: 18px 22px 22px 22px;
             gap: 18px;
         }
-        /* header with remote-controllable elements */
         .tv-header {
             display: flex;
             align-items: center;
@@ -137,14 +135,12 @@
             pointer-events: none;
         }
 
-        /* main area with two sections */
         .tv-main {
             display: flex;
             gap: 22px;
             flex: 1;
             min-height: 0;
         }
-        /* player panel — can receive focus for remote volume */
         .player-panel {
             flex: 1.5;
             background: #000;
@@ -210,7 +206,6 @@
             margin-top: 8px;
         }
 
-        /* channels panel */
         .channels-panel {
             width: 580px;
             background: rgba(16, 16, 16, 0.9);
@@ -320,7 +315,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* remote volume hint */
         .volume-hint {
             position: fixed;
             bottom: 30px;
@@ -339,7 +333,7 @@
     </style>
 </head>
 <body>
-    <!-- NO ADS, NO SPLASH, PURE TV REMOTE LAYOUT -->
+    <!-- NO WRAP: scroll end par ruk jayega, phirse start nahi hoga -->
     <div class="tv-layout">
         <header class="tv-header">
             <div class="logo-block">
@@ -359,14 +353,14 @@
         </header>
 
         <div class="tv-main">
-            <!-- LEFT PLAYER (now focusable for remote volume) -->
+            <!-- PLAYER PANEL focusable for volume -->
             <section class="player-panel" id="playerPanel" tabindex="0">
                 <div class="player-area">
                     <div class="player-wrap">
                         <div class="player-placeholder" id="playerPlaceholder">
                             <i class="fas fa-play-circle"></i>
                             <div>Select a channel</div>
-                            <div style="font-size:1.2rem;">⬆️⬇️ navigate · player focus = volume</div>
+                            <div style="font-size:1.2rem;">⬆️⬇️ list · player focus = vol</div>
                         </div>
                         <div id="my-jwplayer" style="display: none;"></div>
                     </div>
@@ -378,7 +372,7 @@
                 </div>
             </section>
 
-            <!-- RIGHT CHANNELS (PC layout) -->
+            <!-- CHANNELS SECTION -->
             <section class="channels-panel">
                 <div class="panel-header">
                     <div class="header-title">
@@ -397,15 +391,13 @@
             </section>
         </div>
     </div>
-    <!-- tiny hint for remote users -->
-    <div class="volume-hint"><i class="fas fa-volume-up"></i> player focus = CH+/– vol</div>
+    <div class="volume-hint"><i class="fas fa-volume-up"></i> player focus = +/– vol</div>
 
     <script>
         (function() {
-            // ---- NO ADS, FULL REMOTE: category, player, channels all focusable ----
+            // ---- NO ADS, NO SPLASH, STRICT EDGE STOP (NO WRAP) ----
             const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23111111\'/%3E%3Ctext x=\'50\' y=\'65\' text-anchor=\'middle\' fill=\'%23666\' font-size=\'14\' font-family=\'Arial\'%3ETV%3C/text%3E%3C/svg%3E';
             
-            // DOM elements
             const channelGrid = document.getElementById('channelGrid');
             const catFilter = document.getElementById('categoryFilter');
             const searchBox = document.getElementById('searchBox');
@@ -417,7 +409,6 @@
             const channelsCountSpan = document.getElementById('channelsCount');
 
             let allChannels = [];
-            let filtered = [];
             let activeChannel = null;
             let jw = null;
             let categories = new Set();
@@ -426,7 +417,6 @@
                 channelsCountSpan.innerText = cnt + ' Channel' + (cnt !== 1 ? 's' : '');
             }
 
-            // load xchannels.json
             fetch('xchannels.json')
                 .then(r => { if(!r.ok) throw new Error('xchannels.json missing'); return r.json(); })
                 .then(data => {
@@ -441,7 +431,6 @@
                         });
                     }
                     allChannels = flat;
-                    filtered = [...allChannels];
                     
                     catFilter.innerHTML = '<option value="">All Categories</option>';
                     [...categories].sort().forEach(c => {
@@ -466,7 +455,6 @@
                 let channels = allChannels;
                 if(category) channels = channels.filter(c => c.category === category);
                 if(query) channels = channels.filter(c => c.name.toLowerCase().includes(query));
-                filtered = channels;
 
                 if(!channels.length) {
                     channelGrid.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><div>No channels</div></div>`;
@@ -492,7 +480,6 @@
                 channelGrid.innerHTML = html;
                 updateCount(channels.length);
 
-                // attach click & key handlers for each card
                 document.querySelectorAll('.channel-card').forEach(card => {
                     card.addEventListener('click', () => {
                         let url = card.dataset.url;
@@ -546,7 +533,6 @@
                 }
             }
 
-            // debounced search
             let deb;
             function refresh() {
                 if(deb) clearTimeout(deb);
@@ -556,94 +542,90 @@
             searchBox.addEventListener('input', refresh);
             searchBox.addEventListener('keydown', (e) => { if(e.key==='Enter') e.preventDefault(); });
 
-            // ---------- ADVANCED REMOTE: focus across category, player, channels ----------
-            // make playerPanel focusable for volume keys
+            // ---------- REMOTE CONTROL WITH STRICT EDGE (NO WRAP) ----------
             playerPanel.setAttribute('tabindex', '0');
 
-            // define focus regions in order
-            const focusables = [
-                catFilter,                // category dropdown
-                searchBox,                 // search field
-                playerPanel,               // player panel (volume control)
-                // channel cards will be handled separately via arrow keys inside grid
-            ];
-
-            // let user land on category with arrow keys from anywhere?
-            // Global key handler for remote (arrow left/right to switch regions)
             document.addEventListener('keydown', (e) => {
                 const active = document.activeElement;
                 const cards = Array.from(document.querySelectorAll('.channel-card'));
-                const isCardFocus = cards.includes(active);
+                const isCard = cards.includes(active);
 
-                // ---- LEFT / RIGHT : switch between major regions ----
+                // LEFT/RIGHT: cycle between major regions (cat, search, player, first card)
                 if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                    e.preventDefault();  // prevent scrolling
-                    const focusableElements = [
-                        catFilter,
-                        searchBox,
-                        playerPanel,
-                        // after player, we land on first channel if exists
-                        ...(cards.length ? [cards[0]] : [])
-                    ];
-                    // if currently no card, just cycle cat/search/player
-                    let currentIndex = focusableElements.indexOf(active);
-                    if(currentIndex === -1) {
-                        // maybe inside cards but not first? find nearest
-                        if(isCardFocus) {
-                            // we treat cards as group; left/right from card -> go to player or cat?
-                            // we'll go to player if right, cat if left? simpler: jump to cat on left, player on right
+                    e.preventDefault();
+                    // build region list
+                    let regions = [catFilter, searchBox, playerPanel];
+                    if(cards.length) regions.push(cards[0]);  // first card as region entry
+                    
+                    let idx = regions.indexOf(active);
+                    if(idx === -1) {
+                        // if in cards but not first: treat as card region
+                        if(isCard) {
+                            // left from any card -> player, right from any card -> first card? we handle via region jump
+                            // simpler: if left, go to player; if right, go to first card
                             if(e.key === 'ArrowLeft') {
-                                catFilter.focus();
-                            } else {
                                 playerPanel.focus();
+                            } else {
+                                if(cards.length) cards[0].focus();
                             }
-                            return;
                         } else {
                             // fallback
-                            currentIndex = 0;
+                            catFilter.focus();
                         }
+                        return;
                     }
-                    let nextIndex;
+                    // valid region index
                     if(e.key === 'ArrowLeft') {
-                        nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+                        idx = (idx - 1 + regions.length) % regions.length;
                     } else {
-                        nextIndex = (currentIndex + 1) % focusableElements.length;
+                        idx = (idx + 1) % regions.length;
                     }
-                    focusableElements[nextIndex]?.focus();
+                    regions[idx]?.focus();
                     return;
                 }
 
-                // ---- UP/DOWN: navigate channels if within grid, or from player to channels ----
+                // UP/DOWN: navigate channels but STRICTLY no wrap at ends
                 if(e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                    // special: if active is playerPanel, down goes to first channel
+                    // if player focused, down goes to first card (if exists)
                     if(active === playerPanel) {
                         e.preventDefault();
                         if(cards.length) cards[0].focus();
                         return;
                     }
-                    // if active is category or search, down goes to first channel
+                    // if category or search focused, down goes to first card
                     if(active === catFilter || active === searchBox) {
                         e.preventDefault();
                         if(cards.length) cards[0].focus();
                         return;
                     }
-                    // if we are inside cards
-                    if(isCardFocus) {
+                    // if inside cards
+                    if(isCard) {
                         e.preventDefault();
                         let idx = cards.indexOf(active);
                         if(e.key === 'ArrowDown') {
-                            idx = (idx + 1) % cards.length;
-                        } else {
-                            idx = (idx - 1 + cards.length) % cards.length;
+                            // move down, but stop at last card
+                            if(idx < cards.length - 1) {
+                                cards[idx + 1].focus();
+                            } else {
+                                // already at last: do nothing (no wrap)
+                                // optional: blink or just stay
+                                cards[idx].focus(); // keep focus
+                            }
+                        } else { // ArrowUp
+                            if(idx > 0) {
+                                cards[idx - 1].focus();
+                            } else {
+                                // already at first: stay
+                                cards[idx].focus();
+                            }
                         }
-                        cards[idx].focus();
                         return;
                     }
                 }
 
-                // ---- volume control when playerPanel is focused ----
+                // volume control when player focused
                 if(active === playerPanel && jw) {
-                    if(e.key === '+' || e.key === '=' || (e.key === 'ArrowUp' && e.ctrlKey === false)) {
+                    if(e.key === '+' || e.key === '=') {
                         e.preventDefault();
                         try {
                             let vol = jw.getVolume() + 10;
@@ -651,7 +633,7 @@
                             jw.setVolume(vol);
                         } catch(_){}
                     }
-                    if(e.key === '-' || e.key === '_' || (e.key === 'ArrowDown' && e.ctrlKey === false)) {
+                    if(e.key === '-' || e.key === '_') {
                         e.preventDefault();
                         try {
                             let vol = jw.getVolume() - 10;
@@ -661,7 +643,7 @@
                     }
                 }
 
-                // space play/pause from player focus or anywhere (but not in search)
+                // space play/pause (not in search)
                 if(e.key === ' ' && active !== searchBox) {
                     e.preventDefault();
                     if(jw) {
@@ -671,13 +653,11 @@
                     }
                 }
 
-                // slash to search
                 if(e.key === '/' && active !== searchBox) {
                     e.preventDefault();
                     searchBox.focus();
                 }
 
-                // Escape from search
                 if(e.key === 'Escape' && active === searchBox) {
                     searchBox.value = '';
                     refresh();
@@ -685,18 +665,8 @@
                 }
             });
 
-            // ensure channel cards can receive focus
-            // also make sure category dropdown opens with enter (native should work)
-            // extra: select dropdown with arrow keys inside it works natively
-
-            // highlight first channel when list loads
-            const observer = new MutationObserver(() => {
-                // if no focus set and user hasn't focused anything, set to category as starting point
-                if(!document.activeElement || document.activeElement === document.body) {
-                    catFilter.focus();
-                }
-            });
-            observer.observe(channelGrid, { childList: true, subtree: true });
+            // initial focus to category
+            setTimeout(() => catFilter.focus(), 300);
         })();
     </script>
 </body>
